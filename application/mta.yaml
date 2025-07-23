@@ -1,0 +1,48 @@
+_schema-version: 3.3.0
+ID: cap-ai-vector-engine-example
+version: 1.0.0
+description: "A CAP &amp; AI Example using the CAP LLM Plugin."
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm ci
+        - npx cds build --production
+modules:
+  - name: cap-ai-vector-engine-example-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      instances: 1
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: npm-ci
+    provides:
+      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: cap-ai-vector-engine-example-db
+      - name: cap-ai-vector-engine-example-destination
+
+  - name: cap-ai-vector-engine-example-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: cap-ai-vector-engine-example-db
+
+resources:
+  - name: cap-ai-vector-engine-example-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+  - name: cap-ai-vector-engine-example-destination
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite

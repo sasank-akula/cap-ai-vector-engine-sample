@@ -1,0 +1,54 @@
+@server=http://localhost:4004
+@username=alice
+@password=
+
+### DocumentChunk
+# @name DocumentChunk_GET
+GET {{server}}/odata/v4/embedding-storage/storeEmbeddings()
+Authorization: Basic {{username}}:{{password}}
+
+### DocumentChunk
+# @name DocumentChunk_GET
+GET {{server}}/odata/v4/embedding-storage/DocumentChunk
+Authorization: Basic {{username}}:{{password}}
+
+
+### DocumentChunk
+# @name DocumentChunk_POST
+POST {{server}}/odata/v4/embedding-storage/DocumentChunk
+Content-Type: application/json
+Authorization: Basic {{username}}:{{password}}
+
+{
+  "ID": "57613031-5e33-4d98-9886-0f1774c21165",
+  "text_chunk": "text_chunk-576130",
+  "metadata_column": "metadata_column-576130",
+  "createdAt": "2020-01-19T00:00:00.000Z",
+  "createdBy": "createdBy.ccjm@example.com",
+  "modifiedAt": "2012-07-28T00:00:00.000Z",
+  "modifiedBy": "modifiedBy.ccjm@example.net"
+}
+
+
+### DocumentChunk
+# @name DocumentChunk_PATCH
+PATCH {{server}}/odata/v4/embedding-storage/DocumentChunk/57613031-5e33-4d98-9886-0f1774c21165
+Content-Type: application/json
+Authorization: Basic {{username}}:{{password}}
+
+{
+  "ID": "57613031-5e33-4d98-9886-0f1774c21165",
+  "text_chunk": "text_chunk-576130",
+  "metadata_column": "metadata_column-576130",
+  "createdAt": "2020-01-19T00:00:00.000Z",
+  "createdBy": "createdBy.ccjm@example.com",
+  "modifiedAt": "2012-07-28T00:00:00.000Z",
+  "modifiedBy": "modifiedBy.ccjm@example.net"
+}
+
+
+### DocumentChunk
+# @name DocumentChunk_DELETE
+DELETE {{server}}/odata/v4/embedding-storage/DocumentChunk/57613031-5e33-4d98-9886-0f1774c21165
+Content-Type: application/json
+Authorization: Basic {{username}}:{{password}}

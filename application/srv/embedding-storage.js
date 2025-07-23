@@ -42,9 +42,11 @@ let deleteIfExists = (filePath) => {
 module.exports = function() {
   this.on('storeEmbeddings', async (req) => {
     try {
+      
       const vectorPlugin = await cds.connect.to('cap-llm-plugin')
       const { DocumentChunk } = this.entities
       let textChunkEntries = []
+      const embeddingModelName = "text-embedding-ada-002";
       console.log(__dirname)
       console.log(path.resolve('codejam_roadshow_itinerary.txt'))
       const loader = new TextLoader(path.resolve('db/data/codejam_roadshow_itinerary.txt'))
@@ -62,7 +64,17 @@ module.exports = function() {
       console.log("Generating the vector embeddings for the text chunks.")
       // For each text chunk generate the embeddings
       for (const chunk of textChunks) {
-        const embedding = await vectorPlugin.getEmbedding(chunk.pageContent)
+        const embeddingModelConfig = cds.env.requires["GENERATIVE_AI_HUB"][embeddingModelName];
+        
+        const embeddingResult  = await vectorPlugin.getEmbeddingWithConfig(embeddingModelConfig,chunk.pageContent)
+        let embedding =null;
+        if (embeddingModelName === "text-embedding-ada-002"){
+          embedding =  embeddingResult?.data[0]?.embedding;
+       }
+       //Parse the responses of other embedding models supported by the CAP LLM Plugin
+       else{
+         throw new Error(`Embedding model ${embeddingModelName} not supported!\n`)
+       }
         const entry = {
           "text_chunk": chunk.pageContent,
           "metadata_column": loader.filePath,

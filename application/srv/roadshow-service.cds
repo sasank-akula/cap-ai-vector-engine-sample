@@ -1,6 +1,7 @@
+@(requires:'authenticated-user')
 service RoadshowService {
 
-    function getRagResponse() returns String;
+    function getRagResponse(question : String) returns String;
     function executeSimilaritySearch() returns String;
 
 }
