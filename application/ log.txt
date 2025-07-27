@@ -1,0 +1,3 @@
+Retrieving logs for app cap-ai-vector-engine-example-srv  in org 9d5a94ectrial / space dev as sasankakula6@gmail.com...
+
+FAILED

@@ -1,54 +1,91 @@
 @server=http://localhost:4004
-@username=alice
-@password=
 
-### DocumentChunk
-# @name DocumentChunk_GET
-GET {{server}}/odata/v4/embedding-storage/storeEmbeddings()
-Authorization: Basic {{username}}:{{password}}
 
 ### DocumentChunk
 # @name DocumentChunk_GET
 GET {{server}}/odata/v4/embedding-storage/DocumentChunk
-Authorization: Basic {{username}}:{{password}}
+
 
 
 ### DocumentChunk
 # @name DocumentChunk_POST
 POST {{server}}/odata/v4/embedding-storage/DocumentChunk
 Content-Type: application/json
-Authorization: Basic {{username}}:{{password}}
 
 {
-  "ID": "57613031-5e33-4d98-9886-0f1774c21165",
-  "text_chunk": "text_chunk-576130",
-  "metadata_column": "metadata_column-576130",
-  "createdAt": "2020-01-19T00:00:00.000Z",
-  "createdBy": "createdBy.ccjm@example.com",
-  "modifiedAt": "2012-07-28T00:00:00.000Z",
-  "modifiedBy": "modifiedBy.ccjm@example.net"
+  "ID": "25262610-f6e1-4be8-a065-b5c587724731",
+  "text_chunk": "text_chunk-25262610",
+  "metadata_column": "metadata_column-25262610",
+  "createdAt": "2001-02-01T00:00:00.000Z",
+  "createdBy": "createdBy.f1gr6@example.net",
+  "modifiedAt": "2023-03-14T00:00:00.000Z",
+  "modifiedBy": "modifiedBy.f1gr6@example.net"
 }
 
 
 ### DocumentChunk
 # @name DocumentChunk_PATCH
-PATCH {{server}}/odata/v4/embedding-storage/DocumentChunk/57613031-5e33-4d98-9886-0f1774c21165
+PATCH {{server}}/odata/v4/embedding-storage/DocumentChunk/25262610-f6e1-4be8-a065-b5c587724731
 Content-Type: application/json
-Authorization: Basic {{username}}:{{password}}
 
 {
-  "ID": "57613031-5e33-4d98-9886-0f1774c21165",
-  "text_chunk": "text_chunk-576130",
-  "metadata_column": "metadata_column-576130",
-  "createdAt": "2020-01-19T00:00:00.000Z",
-  "createdBy": "createdBy.ccjm@example.com",
-  "modifiedAt": "2012-07-28T00:00:00.000Z",
-  "modifiedBy": "modifiedBy.ccjm@example.net"
+  "ID": "25262610-f6e1-4be8-a065-b5c587724731",
+  "text_chunk": "text_chunk-25262610",
+  "metadata_column": "metadata_column-25262610",
+  "createdAt": "2001-02-01T00:00:00.000Z",
+  "createdBy": "createdBy.f1gr6@example.net",
+  "modifiedAt": "2023-03-14T00:00:00.000Z",
+  "modifiedBy": "modifiedBy.f1gr6@example.net"
 }
 
 
 ### DocumentChunk
 # @name DocumentChunk_DELETE
-DELETE {{server}}/odata/v4/embedding-storage/DocumentChunk/57613031-5e33-4d98-9886-0f1774c21165
+DELETE {{server}}/odata/v4/embedding-storage/DocumentChunk/25262610-f6e1-4be8-a065-b5c587724731
 Content-Type: application/json
-Authorization: Basic {{username}}:{{password}}
+
+
+### Files
+# @name Files_GET
+GET {{server}}/odata/v4/embedding-storage/Files
+
+
+
+### Files
+# @name Files_POST
+POST {{server}}/odata/v4/embedding-storage/Files
+Content-Type: application/json
+
+{
+  "ID": "16672293-14e8-4545-b365-2757aefa4cf8",
+  "mediaType": "mediaType-16672293",
+  "fileName": "fileName-16672293",
+  "size": "size-16672293",
+  "createdAt": "2014-03-17T00:00:00.000Z",
+  "createdBy": "createdBy.9xcf9@example.net",
+  "modifiedAt": "2022-09-22T00:00:00.000Z",
+  "modifiedBy": "modifiedBy.9xcf9@example.org"
+}
+
+
+### Files
+# @name Files_PATCH
+PATCH {{server}}/odata/v4/embedding-storage/Files/16672293-14e8-4545-b365-2757aefa4cf8
+Content-Type: application/json
+
+{
+  "ID": "16672293-14e8-4545-b365-2757aefa4cf8",
+  "mediaType": "mediaType-16672293",
+  "fileName": "fileName-16672293",
+  "size": "size-16672293",
+  "createdAt": "2014-03-17T00:00:00.000Z",
+  "createdBy": "createdBy.9xcf9@example.net",
+  "modifiedAt": "2022-09-22T00:00:00.000Z",
+  "modifiedBy": "modifiedBy.9xcf9@example.org"
+}
+
+
+### Files
+# @name Files_DELETE
+DELETE {{server}}/odata/v4/embedding-storage/Files/16672293-14e8-4545-b365-2757aefa4cf8
+Content-Type: application/json

@@ -28,14 +28,14 @@
       "GENERATIVE_AI_HUB": {
         "gpt-4": {
           "destinationName": "GenAIHubDestination",
-          "deploymentUrl": "/inference/deployments/d88dbde79e0d479d",
+          "deploymentUrl": "/inference/deployments/d07c950f24f4b589",
           "resourceGroup": "default",
           "apiVersion": "2023-05-15",
           "modelName": "gpt-4"
         },
         "text-embedding-ada-002": {
           "destinationName": "GenAIHubDestination",
-          "deploymentUrl": "/inference/deployments/dbadc9a58f741d82",
+          "deploymentUrl": "/inference/deployments/d0b11b39cbc4af5e",
           "resourceGroup": "default",
           "apiVersion": "2023-05-15",
           "modelName": "text-embedding-ada-002"

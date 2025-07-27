@@ -1,0 +1,122 @@
+@server=http://localhost:4004
+
+
+### Conversation
+# @name Conversation_GET
+GET {{server}}/odata/v4/roadshow/Conversation
+
+
+
+### Conversation
+# @name Conversation_POST
+POST {{server}}/odata/v4/roadshow/Conversation
+Content-Type: application/json
+
+{
+  "cID": "20859452-202c-4675-af34-cb4738f98100",
+  "userID": "userID-20859452",
+  "creation_time": "2000-03-11T00:00:00.000Z",
+  "last_update_time": "2018-07-20T00:00:00.000Z",
+  "title": "title-20859452",
+  "to_messages": [
+    {
+      "mID": "10221264-c9b9-45b8-91ae-95927fdacae2",
+      "role": "role-10221264",
+      "content": "content-10221264",
+      "creation_time": "2015-08-20T00:00:00.000Z"
+    },
+    {
+      "mID": "10221265-b4dd-41a1-95e3-4e257c7096b8",
+      "role": "role-10221265",
+      "content": "content-10221265",
+      "creation_time": "2016-07-21T00:00:00.000Z"
+    }
+  ]
+}
+
+
+### Conversation
+# @name Conversation_PATCH
+PATCH {{server}}/odata/v4/roadshow/Conversation/20859452-202c-4675-af34-cb4738f98100
+Content-Type: application/json
+
+{
+  "cID": "20859452-202c-4675-af34-cb4738f98100",
+  "userID": "userID-20859452",
+  "creation_time": "2000-03-11T00:00:00.000Z",
+  "last_update_time": "2018-07-20T00:00:00.000Z",
+  "title": "title-20859452",
+  "to_messages": [
+    {
+      "mID": "10221264-c9b9-45b8-91ae-95927fdacae2",
+      "role": "role-10221264",
+      "content": "content-10221264",
+      "creation_time": "2015-08-20T00:00:00.000Z"
+    },
+    {
+      "mID": "10221265-b4dd-41a1-95e3-4e257c7096b8",
+      "role": "role-10221265",
+      "content": "content-10221265",
+      "creation_time": "2016-07-21T00:00:00.000Z"
+    }
+  ]
+}
+
+
+### Conversation
+# @name Conversation_DELETE
+DELETE {{server}}/odata/v4/roadshow/Conversation/20859452-202c-4675-af34-cb4738f98100
+Content-Type: application/json
+
+
+### Message
+# @name Message_GET
+GET {{server}}/odata/v4/roadshow/Message
+
+
+
+### Message
+# @name Message_POST
+POST {{server}}/odata/v4/roadshow/Message
+Content-Type: application/json
+
+{
+  "mID": "10221264-c9b9-45b8-91ae-95927fdacae2",
+  "role": "role-10221264",
+  "content": "content-10221264",
+  "creation_time": "2015-08-20T00:00:00.000Z"
+}
+
+
+### Message
+# @name Message_PATCH
+PATCH {{server}}/odata/v4/roadshow/Message(cID=[object Object],mID=10221264-c9b9-45b8-91ae-95927fdacae2)
+Content-Type: application/json
+
+{
+  "mID": "10221264-c9b9-45b8-91ae-95927fdacae2",
+  "role": "role-10221264",
+  "content": "content-10221264",
+  "creation_time": "2015-08-20T00:00:00.000Z"
+}
+
+
+### Message
+# @name Message_DELETE
+DELETE {{server}}/odata/v4/roadshow/Message(cID=[object Object],mID=10221264-c9b9-45b8-91ae-95927fdacae2)
+Content-Type: application/json
+
+
+### getChatRagResponse
+# @name getChatRagResponse_POST
+POST {{server}}/odata/v4/roadshow/getChatRagResponse
+Content-Type: application/json
+
+{
+  "conversationId": "conversationId-240",
+  "messageId": "",
+  "message_time": "2025-07-27T17:00:00.00Z",
+  "user_id": "user_id-24045578",
+  "user_query": "how far between first event and last event approximaate is enough"
+}
+
