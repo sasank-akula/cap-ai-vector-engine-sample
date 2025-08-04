@@ -1,9 +1,11 @@
 const cds = require('@sap/cds')
 const { INSERT, DELETE, SELECT } = cds.ql
+const { PDFLoader } = require('langchain/document_loaders/fs/pdf');
 const { TextLoader } = require('langchain/document_loaders/fs/text')
 const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter')
 const path = require('path')
-const fs = require('fs')
+const fs = require('fs');
+const { throwDeprecation } = require('process');
   
 // Helper method to convert embeddings to buffer for insertion
 let array2VectorBuffer = (data) => {
@@ -40,25 +42,60 @@ let deleteIfExists = (filePath) => {
 }
 
 module.exports = function() {
+
+  
+  this.on('deleteFiles',async(req)=>{
+    const {DocumentFiles,DocumentChunk} = this.entities;
+    await DELETE.from(DocumentFiles)
+    return "Success"
+})
+
+  this.after('CREATE','DocumentFiles',async(result,req)=>{
+    try{
+      const ID=result.ID;
+      await this.storeEmbeddings({documentID:ID});
+    }
+    catch(error){
+      console.log("error : ",error)
+      throw new Error("Error while storing embiddings  ")
+    }
+  });
   this.on('storeEmbeddings', async (req) => {
     try {
-      
+      const {documentID} =req.data
       const vectorPlugin = await cds.connect.to('cap-llm-plugin')
-      const { DocumentChunk } = this.entities
+      const { DocumentFiles,DocumentChunk } = this.entities
+      const record= await SELECT.from(DocumentFiles).where({ID:documentID})
+      console.log(record)
+      const pdfBase64 = record[0].content; 
+      const fileName = record[0].fileName;
+      if (!pdfBase64) throw new Error("❌ No PDF Base64 provided!");
+
+        // ✅ STEP 1: Convert Base64 → Buffer & Save as Temp File
+        const pdfBuffer = Buffer.from(pdfBase64, 'base64');
+        const tempDocLocation = path.join(__dirname, fileName);
+        fs.writeFileSync(tempDocLocation, pdfBuffer);
+        console.log(`📄 Temp PDF saved: ${tempDocLocation}`);
+
+        const loader = new PDFLoader(tempDocLocation);
       let textChunkEntries = []
       const embeddingModelName = "text-embedding-ada-002";
-      console.log(__dirname)
-      console.log(path.resolve('codejam_roadshow_itinerary.txt'))
-      const loader = new TextLoader(path.resolve('db/data/codejam_roadshow_itinerary.txt'))
+      // console.log(__dirname)
+      // console.log(path.resolve('codejam_roadshow_itinerary.txt'))
+      // const loader = new TextLoader(path.resolve('db/data/codejam_roadshow_itinerary.txt'))
       const document = await loader.load()
 
       const splitter = new RecursiveCharacterTextSplitter({
-        chunkSize: 500,
-        chunkOverlap: 0,
+        chunkSize: 2000,
+        chunkOverlap: 150,
         addStartIndex: true
       })
         
       const textChunks = await splitter.splitDocuments(document)
+      // console.log(rawtextChunks)
+      // const textChunks=rawtextChunks.map((chunk)=>{
+
+      // })
       console.log(`Documents split into ${textChunks.length} chunks.`)
 
       console.log("Generating the vector embeddings for the text chunks.")
@@ -71,25 +108,28 @@ module.exports = function() {
         if (embeddingModelName === "text-embedding-ada-002"){
           embedding =  embeddingResult?.data[0]?.embedding;
        }
-       //Parse the responses of other embedding models supported by the CAP LLM Plugin
+
        else{
          throw new Error(`Embedding model ${embeddingModelName} not supported!\n`)
        }
         const entry = {
           "text_chunk": chunk.pageContent,
           "metadata_column": loader.filePath,
-          "embedding": array2VectorBuffer(embedding)
+          "embedding": array2VectorBuffer(embedding),
+          "documentID_ID":documentID
         }
         console.log(entry)
         textChunkEntries.push(entry)
       }
-
+      
       console.log("Inserting text chunks with embeddings into db.")
       // Insert the text chunk with embeddings into db
       const insertStatus = await INSERT.into(DocumentChunk).entries(textChunkEntries)
       if (!insertStatus) {
         throw new Error("Insertion of text chunks into db failed!")
       }
+      deleteIfExists(tempDocLocation);
+      console.log(`🗑 Temp file deleted: ${tempDocLocation}`);
       return `Embeddings stored successfully to db.`
     } catch (error) {
       // Handle any errors that occur during the execution

@@ -21,5 +21,6 @@ service RoadshowService {
   action   getChatRagResponse(conversationId : String, messageId : String, message_time : String, user_id : String, user_query : String) returns RagResponse;
 function deleteChatData() returns String;
     // function executeSimilaritySearch() returns String;
+    
 
 }

@@ -1,14 +1,16 @@
 using {sap.advocates.demo as db} from '../db/schema';
-
+@(requires: 'authenticated-user')
 service EmbeddingStorageService {
+    
     entity DocumentChunk as
         projection on db.DocumentChunk
         excluding {
             embedding
         };
+    entity DocumentFiles as projection on db.DocumentFiles; 
 
-    entity Files         as projection on db.Files;
-
-    function storeEmbeddings()  returns String;
+    function storeEmbeddings(documentID : String)  returns String;
+    function getLogedInUser() returns String;
     function deleteEmbeddings() returns String;
+    function deleteFiles() returns String;
 }

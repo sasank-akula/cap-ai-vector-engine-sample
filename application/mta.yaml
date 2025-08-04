@@ -26,6 +26,7 @@ modules:
     requires:
       - name: cap-ai-vector-engine-example-db
       - name: cap-ai-vector-engine-example-destination
+      - name: cap-ai-vector-engine-example-auth
 
   - name: cap-ai-vector-engine-example-db-deployer
     type: hdb
@@ -46,3 +47,12 @@ resources:
     parameters:
       service: destination
       service-plan: lite
+  - name: cap-ai-vector-engine-example-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: cap-ai-vector-engine-example-${org}-${space}
+        tenant-mode: dedicated

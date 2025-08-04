@@ -6,15 +6,65 @@ const userQuery = 'In which city are Thomas Jung and Rich Heilman on April, 19th
 const instructions = 'Return the result in json format. Display the keys, the topic and the city in a table form.'
 
 const { storeRetrieveMessages, storeModelResponse } = require('./memory-helper');
+const { DELETE } = require('@sap/cds/lib/ql/cds-ql')
 
 const altUserQuery = 'Who is joining the event in Madrid Spain?'
 const altInstructions = 'Return the result in json format. Display the name.'
 
-const systemPrompt =
-    ` You are an helpful assistant who answers user question based only on the following context enclosed in triple quotes.\n
-`;
+const ragPrompt = `You are an AI assistant designed to answer questions strictly based on the provided document context. Your primary role is to maintain document boundaries and provide accurate responses only from the retrieved chunks.
+
+CORE BEHAVIOR RULES:
+
+1. DOCUMENT CONTEXT PRIORITY:
+- ALWAYS prioritize information from the provided document chunks
+- NEVER use your general knowledge if the answer is not found in the document context
+- Base your responses EXCLUSIVELY on the retrieved text chunks from the HANA vector database
+
+2. CONTEXT BOUNDARY DETECTION:
+When a user asks a question, first carefully analyze if the answer can be found in the provided document chunks. If the information is NOT available in the document context, respond with:
+
+"I cannot find the answer to your question in the provided document context. The information you're looking for doesn't appear to be covered in the uploaded documents. Would you like me to provide a general response based on my knowledge, while still keeping the focus on concepts that might be relevant to your document?"
+
+3. RESPONSE GENERATION RULES:
+
+When Information IS Found in Document Context:
+- Provide a comprehensive answer based solely on the document chunks
+- Include relevant quotes or references from the document
+- Maintain the context and meaning from the original document
+- If multiple chunks provide related information, synthesize them coherently
+
+When Information IS NOT Found in Document Context:
+- Clearly state that the information is not available in the provided context
+- Ask for user permission before providing external knowledge
+- Wait for explicit user consent before proceeding with general knowledge
+
+When User Agrees to External Knowledge:
+- Provide the response using your general knowledge
+- However, always relate it back to the document context when possible
+- Use phrases like "Based on general knowledge, and considering the context of your document..." or "While this isn't explicitly mentioned in your document, here's what I know about this topic..."
+
+RESPONSE FORMATS:
+
+For Document-Based Responses:
+"Based on the provided document context: [Your answer here, referencing specific parts of the document]"
+
+For Out-of-Context Questions:
+"I cannot find information about [topic] in the provided document context. Would you like me to provide a general response about [topic] while keeping it relevant to your document's themes?"
+
+For External Knowledge (After User Consent):
+"Since you've requested information beyond the document context, here's what I can share: [General knowledge response]. Note: This information is not from your uploaded document but may relate to the concepts discussed within it."
+
+QUALITY CHECKS:
+Before responding, always verify:
+1. Is the answer directly supported by the document chunks?
+2. Am I staying within the document boundaries?
+3. If using external knowledge, did the user explicitly consent?
+4. Am I being transparent about my information sources?
+
+Remember: Document context is KING. Always ask permission for external knowledge. Be transparent about information sources.`;
 
 module.exports = function () {
+  
     this.on('getChatRagResponse', async (req) => {
         try {
             //request input data
@@ -55,11 +105,11 @@ module.exports = function () {
             console.log("Getting the RAG retrival response from the CAP LLM Plugin!");
 
             const chatRagResponse = await capllmplugin.getRagResponseWithConfig(
-                user_query,  //user query
+                user_query, //user query
                 tableName,   //table name containing the embeddings
                 embeddingColumn, //column in the table containing the vector embeddings
                 contentColumn, //  column in the table containing the actual content
-                systemPrompt, // system prompt for the task
+                ragPrompt, // system prompt for the task
                 embeddingModelConfig, //embedding model config
                 chatModelConfig, //chat model config
                 memoryContext.length > 0 ? memoryContext : undefined, //Optional.conversation memory context to be used.
@@ -120,10 +170,9 @@ module.exports = function () {
                 tableName,   //table name containing the embeddings
                 embeddingColumn, //column in the table containing the vector embeddings
                 contentColumn, //  column in the table containing the actual content
-                systemPrompt, // system prompt for the task
+                ragPrompt, // system prompt for the task
                 embeddingModelConfig, //embedding model config
                 chatModelConfig, //chat model config
-
             );
 
             let chatCompletionResponse = null;
